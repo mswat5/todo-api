@@ -1,24 +1,16 @@
 import { Router } from "express";
+import { loginLimiter } from "../middleware/rateLimiter";
+import { verifyToken } from "../middleware/auth";
 import {
-  forgotPassword,
   loginUser,
-  logoutUser,
   registerUser,
-  resetPassword,
-  verifyToken,
+  logoutUser,
 } from "../controllers/authController";
-import { loginLimiter, passwordResetLimiter } from "../middleware/rateLimiter";
-import {
-  getUserProfile,
-  updateUserProfile,
-} from "../controllers/userController";
 
 const router = Router();
+
 router.post("/login", loginLimiter, loginUser);
-router.post("/register", loginLimiter, registerUser);
-router.post("/forgot-password", passwordResetLimiter, forgotPassword);
-router.post("/reset-password", passwordResetLimiter, resetPassword);
+router.post("/register", registerUser);
 router.post("/logout", verifyToken, logoutUser);
-router.get("/profile", verifyToken, getUserProfile);
-router.patch("/profile", verifyToken, updateUserProfile);
+
 export default router;
